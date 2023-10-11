@@ -6,7 +6,8 @@ local function get_script()
 
   if base.available_container() then
     -- use workspaces clone folder
-    return ("%sworkspaces%sneotest-python%sneotest.py"):format(lib.files.sep)
+    -- return ("%sworkspaces%sneotest-python%sneotest.py"):format(lib.files.sep)
+    return "/workspaces/neotest-python/neotest.py"
   end
 
   local paths = vim.api.nvim_get_runtime_file("neotest.py", true)
