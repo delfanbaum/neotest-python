@@ -43,6 +43,7 @@ function M.available_container()
   end
   -- fallback to false
   available_container["bool"] = true
+  vim.api.nvim_echo(available_container["bool"])
   return available_container["bool"]
 end
 
