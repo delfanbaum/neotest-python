@@ -48,7 +48,7 @@ function M.get_python_command(root)
   end
 
   -- fallback to regular get_python_command_env
-  return python_command_mem_container[root]
+  return python_command_mem[root]
 end
 
 ---@return string[]
