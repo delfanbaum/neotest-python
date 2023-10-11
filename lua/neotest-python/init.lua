@@ -3,6 +3,12 @@ local lib = require("neotest.lib")
 local base = require("neotest-python.base")
 
 local function get_script()
+
+  if base.available_container() then
+    -- use workspaces clone folder
+    return ("%sworkspaces%sneotest-python%sneotest.py"):format(lib.files.sep)
+  end
+
   local paths = vim.api.nvim_get_runtime_file("neotest.py", true)
   for _, path in ipairs(paths) do
     if vim.endswith(path, ("neotest-python%sneotest.py"):format(lib.files.sep)) then
