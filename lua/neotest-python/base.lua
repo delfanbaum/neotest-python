@@ -22,9 +22,33 @@ M.module_exists = function(module, python_command)
 end
 
 local python_command_mem = {}
+local python_command_mem_container = {}
 
 ---@return string[]
 function M.get_python_command(root)
+  if python_command_mem_container[root] then
+    return python_command_mem_container[root]
+  end
+
+  -- check if there is a runnable devcontainer
+  if lib.files.exists(".devcontainer/devcontainer.json") then
+    -- is the cli available? if so ensure the container is running
+    local success, exit_code = pcall(lib.process.run {
+      "devcontainer", "up", "--workspace-folder", "."
+    })
+    if success and exit_code == 0 then
+      python_command_mem_container[root] = "devcontainer exec --workspace-folder ." .. M.get_python_command_env(root)
+      return python_command_mem_container[root]
+    end
+  end
+
+  -- fallback to regular get_python_command_env
+  python_command_mem_container[root] = M.get_python_command_env(root)
+  return python_command_mem_container[root]
+end
+
+---@return string[]
+function M.get_python_command_env(root)
   if python_command_mem[root] then
     return python_command_mem[root]
   end
