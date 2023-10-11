@@ -55,7 +55,7 @@ function M.get_python_command(root)
   python_command_mem[root] = M.get_python_command_env(root)
 
   -- check if there is a runnable devcontainer
-  if M.available_container(root) then
+  if M.available_container() then
     python_command_mem_container[root] = vim.tbl_flatten({
       "devcontainer", "exec", "--workspace-folder",  ".",
       python_command_mem[root]
