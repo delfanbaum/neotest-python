@@ -30,23 +30,24 @@ function M.get_python_command(root)
     return python_command_mem_container[root]
   end
 
+  python_command_mem[root] = M.get_python_command_env(root)
+
   -- check if there is a runnable devcontainer
   if lib.files.exists(".devcontainer/devcontainer.json") then
     -- is the cli available? if so ensure the container is running
-    local success, exit_code = pcall(lib.process.run {
-      "devcontainer", "up", "--workspace-folder", "."
-    })
+    local success, exit_code, _ = pcall(lib.process.run {
+      "devcontainer", "up", "--workspace-folder", "." },
+      { stdout = true })
     if success and exit_code == 0 then
       python_command_mem_container[root] = vim.tbl_flatten({
-        "devcontainer exec --workspace-folder .",
-        M.get_python_command_env(root)
+        "devcontainer", "exec", "--workspace-folder",  ".",
+        python_command_mem[root]
       })
       return python_command_mem_container[root]
     end
   end
 
   -- fallback to regular get_python_command_env
-  python_command_mem_container[root] = M.get_python_command_env(root)
   return python_command_mem_container[root]
 end
 
